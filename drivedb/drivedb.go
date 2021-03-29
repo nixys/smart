@@ -81,10 +81,14 @@ func (db *DriveDb) LookupDrive(ident []byte) DriveModel {
 }
 
 // OpenDriveDb opens a YAML-formatted drive database, unmarshalls it, and returns a DriveDb.
-func OpenDriveDb(dbfile string) (DriveDb, error) {
+func OpenDriveDb(dbFile string) (DriveDb, error) {
 	var db DriveDb
 
-	f, err := os.Open(dbfile)
+	if dbFile == "" {
+		dbFile = "drivedb.yaml"
+	}
+
+	f, err := os.Open(dbFile)
 	if err != nil {
 		return db, nil
 	}
