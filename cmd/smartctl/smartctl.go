@@ -143,7 +143,7 @@ func main() {
 			os.Exit(1)
 		}
 
-		megaraid.OpenMegasasIoctl(host, disk)
+		megaraid.OpenMegasasIoctl(host, disk, os.Stdout)
 	} else if *scan {
 		scanDevices()
 	} else {

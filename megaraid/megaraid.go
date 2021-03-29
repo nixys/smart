@@ -24,6 +24,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -348,11 +349,11 @@ func (d *MegasasDevice) inquiry() scsi.InquiryResponse {
 	return inqBuf
 }
 
-func OpenMegasasIoctl(host uint16, diskNum uint8) error {
+func OpenMegasasIoctl(host uint16, diskNum uint8, w io.Writer) error {
 	var respBuf []byte
 
 	m, _ := CreateMegasasIoctl()
-	fmt.Printf("%#v\n", m)
+	fmt.Fprintln(w, "%#v\n", m)
 
 	defer m.Close()
 
@@ -362,7 +363,7 @@ func OpenMegasasIoctl(host uint16, diskNum uint8) error {
 		deviceId: uint16(diskNum),
 		ctl:      &m,
 	}
-	fmt.Printf("%#v\n", md)
+	fmt.Fprintln(w, "%#v\n", md)
 
 	// Send ATA IDENTIFY command as a CDB16 passthru command
 	cdb := scsi.CDB16{scsi.SCSI_ATA_PASSTHRU_16}
@@ -379,9 +380,9 @@ func OpenMegasasIoctl(host uint16, diskNum uint8) error {
 	binary.Read(bytes.NewBuffer(respBuf), utils.NativeEndian, &ident_buf)
 
 	fmt.Println("\nATA IDENTIFY data follows:")
-	fmt.Printf("Serial Number: %s\n", ident_buf.SerialNumber())
-	fmt.Printf("Firmware Revision: %s\n", ident_buf.FirmwareRevision())
-	fmt.Printf("Model Number: %s\n", ident_buf.ModelNumber())
+	fmt.Fprintln(w, "Serial Number: %s\n", ident_buf.SerialNumber())
+	fmt.Fprintln(w, "Firmware Revision: %s\n", ident_buf.FirmwareRevision())
+	fmt.Fprintln(w, "Model Number: %s\n", ident_buf.ModelNumber())
 
 	db, err := drivedb.OpenDriveDb("drivedb.yaml")
 	if err != nil {
@@ -389,7 +390,7 @@ func OpenMegasasIoctl(host uint16, diskNum uint8) error {
 	}
 
 	thisDrive := db.LookupDrive(ident_buf.ModelNumber())
-	fmt.Printf("Drive DB contains %d entries. Using model: %s\n", len(db.Drives), thisDrive.Family)
+	fmt.Fprintln(w, "Drive DB contains %d entries. Using model: %s\n", len(db.Drives), thisDrive.Family)
 
 	// Send ATA SMART READ command as a CDB16 passthru command
 	cdb = scsi.CDB16{scsi.SCSI_ATA_PASSTHRU_16}
@@ -407,7 +408,7 @@ func OpenMegasasIoctl(host uint16, diskNum uint8) error {
 
 	smart := ata.SmartPage{}
 	binary.Read(bytes.NewBuffer(respBuf[:362]), utils.NativeEndian, &smart)
-	ata.PrintSMARTPage(smart, thisDrive, os.Stdout)
+	ata.PrintSMARTPage(smart, thisDrive, w)
 
 	return nil
 }
