@@ -19,7 +19,7 @@ package smart
 import (
 	"path/filepath"
 
-	"github.com/dswarbrick/smart/scsi"
+	"github.com/randreev1321/smart/scsi"
 )
 
 // TODO: Make this discover NVMe and MegaRAID devices also.

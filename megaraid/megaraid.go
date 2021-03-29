@@ -33,11 +33,11 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/dswarbrick/smart/ata"
-	"github.com/dswarbrick/smart/drivedb"
-	"github.com/dswarbrick/smart/ioctl"
-	"github.com/dswarbrick/smart/scsi"
-	"github.com/dswarbrick/smart/utils"
+	"github.com/randreev1321/smart/ata"
+	"github.com/randreev1321/smart/drivedb"
+	"github.com/randreev1321/smart/ioctl"
+	"github.com/randreev1321/smart/scsi"
+	"github.com/randreev1321/smart/utils"
 )
 
 const (
@@ -177,7 +177,7 @@ func CreateMegasasIoctl() (MegasasIoctl, error) {
 		}
 
 		if m.DeviceMajor == 0 {
-			log.Println("Could not determine megaraid major number!")
+			//log.Println("Could not determine megaraid major number!")
 			return m, nil
 		}
 

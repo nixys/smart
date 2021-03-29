@@ -26,9 +26,9 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/dswarbrick/smart/drivedb"
-	"github.com/dswarbrick/smart/ioctl"
-	"github.com/dswarbrick/smart/utils"
+	"github.com/randreev1321/smart/drivedb"
+	"github.com/randreev1321/smart/ioctl"
+	"github.com/randreev1321/smart/utils"
 )
 
 const (
