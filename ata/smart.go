@@ -17,7 +17,6 @@ package ata
 import (
 	"fmt"
 	"io"
-	"regexp"
 	"strconv"
 
 	"github.com/randreev1321/smart/drivedb"
@@ -275,32 +274,20 @@ func formatRawValue(v uint64, conv string) (s string) {
 
 func PrintTemp(smart SmartPage, drive drivedb.DriveModel, w io.Writer) {
 
-	var rawValue uint64
 	tepmTable := make(map[uint8]string)
 
 	for _, attr := range smart.Attrs {
 		if (attr.Id == 190) || (attr.Id == 194) || (attr.Id == 231) {
-			conv, ok := drive.Presets[strconv.Itoa(int(attr.Id))]
-			if ok {
-				rawValue = attr.decodeVendorBytes(conv.Conv)
-			}
-
-			tepmTable[attr.Id] = formatRawValue(rawValue, conv.Conv)
+			tepmTable[attr.Id] = strconv.Itoa(int(attr.Value))
 		}
 	}
 
 	if temp, found := tepmTable[194]; found {
-		re := regexp.MustCompile("[0-9]+")
-		res := re.FindAllString(temp, -1)
-		fmt.Fprintf(w, "%s", res[0])
+		fmt.Fprintf(w, "%s", temp)
 	} else if temp, found := tepmTable[231]; found {
-		re := regexp.MustCompile("[0-9]+")
-		res := re.FindAllString(temp, -1)
-		fmt.Fprintf(w, "%s", res[0])
+		fmt.Fprintf(w, "%s", temp)
 	} else if temp, found := tepmTable[190]; found {
-		re := regexp.MustCompile("[0-9]+")
-		res := re.FindAllString(temp, -1)
-		fmt.Fprintf(w, "%s", res[0])
+		fmt.Fprintf(w, "%s", temp)
 	}
 }
 
