@@ -352,7 +352,7 @@ func (d *MegasasDevice) inquiry() scsi.InquiryResponse {
 func PrintTemp(host uint16, diskNum uint8, w io.Writer) error {
 
 	m, _ := CreateMegasasIoctl()
-	db, err := drivedb.OpenDriveDb("drivedb.yaml")
+	db, err := drivedb.OpenDriveDb("")
 	if err != nil {
 		return err
 	}
@@ -419,7 +419,7 @@ func OpenMegasasIoctl(host uint16, diskNum uint8, w io.Writer) error {
 	fmt.Fprintln(w, "Firmware Revision: %s\n", ident_buf.FirmwareRevision())
 	fmt.Fprintln(w, "Model Number: %s\n", ident_buf.ModelNumber())
 
-	db, err := drivedb.OpenDriveDb("drivedb.yaml")
+	db, err := drivedb.OpenDriveDb("")
 	if err != nil {
 		return err
 	}
