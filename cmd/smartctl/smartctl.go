@@ -132,6 +132,12 @@ func main() {
 			fmt.Println(err)
 			os.Exit(1)
 		}
+
+		fmt.Println("Device temperature:")
+		if err := d.PrintTemp(&db, os.Stdout); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	} else if *megaraidDev != "" {
 		var (
 			host uint16
@@ -144,6 +150,12 @@ func main() {
 		}
 
 		megaraid.OpenMegasasIoctl(host, disk, os.Stdout)
+
+		fmt.Println("Device temperature:")
+		if err := megaraid.PrintTemp(host, disk, os.Stdout); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
 	} else if *scan {
 		scanDevices()
 	} else {

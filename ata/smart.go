@@ -17,6 +17,7 @@ package ata
 import (
 	"fmt"
 	"io"
+	"regexp"
 	"strconv"
 
 	"github.com/randreev1321/smart/drivedb"
@@ -289,11 +290,14 @@ func PrintTemp(smart SmartPage, drive drivedb.DriveModel, w io.Writer) {
 	}
 
 	if temp, found := tepmTable[194]; found {
-		fmt.Fprintf(w, "%s", temp)
+		re := regexp.MustCompile("[0-9]+")
+		fmt.Fprintf(w, "%s", re.FindAllString(temp, -1)[0])
 	} else if temp, found := tepmTable[231]; found {
-		fmt.Fprintf(w, "%s", temp)
+		re := regexp.MustCompile("[0-9]+")
+		fmt.Fprintf(w, "%s", re.FindAllString(temp, -1)[0])
 	} else if temp, found := tepmTable[190]; found {
-		fmt.Fprintf(w, "%s", temp)
+		re := regexp.MustCompile("[0-9]+")
+		fmt.Fprintf(w, "%s", re.FindAllString(temp, -1)[0])
 	}
 }
 
