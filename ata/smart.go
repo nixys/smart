@@ -272,6 +272,31 @@ func formatRawValue(v uint64, conv string) (s string) {
 	return s
 }
 
+func PrintTemp(smart SmartPage, drive drivedb.DriveModel, w io.Writer) {
+
+	var rawValue uint64
+	tepmTable := make(map[uint8]string)
+
+	for _, attr := range smart.Attrs {
+		if (attr.Id == 190) || (attr.Id == 194) || (attr.Id == 231) {
+			conv, ok := drive.Presets[strconv.Itoa(int(attr.Id))]
+			if ok {
+				rawValue = attr.decodeVendorBytes(conv.Conv)
+			}
+
+			tepmTable[attr.Id] = formatRawValue(rawValue, conv.Conv)
+		}
+	}
+
+	if temp, found := tepmTable[194]; found {
+		fmt.Fprintf(w, "%s", temp)
+	} else if temp, found := tepmTable[231]; found {
+		fmt.Fprintf(w, "%s", temp)
+	} else if temp, found := tepmTable[190]; found {
+		fmt.Fprintf(w, "%s", temp)
+	}
+}
+
 func PrintSMARTPage(smart SmartPage, drive drivedb.DriveModel, w io.Writer) {
 	fmt.Fprintf(w, "\nSMART structure version: %d\n", smart.Version)
 	fmt.Fprintf(w, "ID# ATTRIBUTE_NAME           FLAG     VALUE WORST RESERVED TYPE     UPDATED RAW_VALUE\n")

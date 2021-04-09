@@ -73,6 +73,39 @@ func (d *SATDevice) readSMARTLog(logPage uint8) ([]byte, error) {
 	return respBuf, nil
 }
 
+func (d *SATDevice) PrintTemp(db *drivedb.DriveDb, w io.Writer) error {
+
+	identBuf, err := d.identify()
+	if err != nil {
+		return err
+	}
+
+	thisDrive := db.LookupDrive(identBuf.ModelNumber())
+
+	/*
+	 * SMART READ DATA
+	 */
+	cdb := CDB16{SCSI_ATA_PASSTHRU_16}
+	cdb[1] = 0x08                // ATA protocol (4 << 1, PIO data-in)
+	cdb[2] = 0x0e                // BYT_BLOK = 1, T_LENGTH = 2, T_DIR = 1
+	cdb[4] = ata.SMART_READ_DATA // feature LSB
+	cdb[10] = 0x4f               // low lba_mid
+	cdb[12] = 0xc2               // low lba_high
+	cdb[14] = ata.ATA_SMART      // command
+
+	respBuf := make([]byte, 512)
+
+	if err := d.sendCDB(cdb[:], &respBuf); err != nil {
+		return fmt.Errorf("sendCDB SMART READ DATA: %v", err)
+	}
+
+	smart := ata.SmartPage{}
+	binary.Read(bytes.NewBuffer(respBuf[:362]), utils.NativeEndian, &smart)
+	ata.PrintTemp(smart, thisDrive, w)
+
+	return nil
+}
+
 func (d *SATDevice) PrintSMART(db *drivedb.DriveDb, w io.Writer) error {
 	// Standard SCSI INQUIRY command
 	inqResp, err := d.inquiry()

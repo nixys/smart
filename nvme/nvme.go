@@ -211,6 +211,25 @@ func (d *NVMeDevice) Close() error {
 	return unix.Close(d.fd)
 }
 
+func (d *NVMeDevice) PrintTemp(db *drivedb.DriveDb, w io.Writer) error {
+
+	buf := make([]byte, 512)
+
+	// Read SMART log
+	if err := d.readLogPage(0x02, &buf); err != nil {
+		return err
+	}
+
+	var sl nvmeSMARTLog
+
+	binary.Read(bytes.NewBuffer(buf[:]), utils.NativeEndian, &sl)
+
+	fmt.Fprintf(w, "Temperature: %d Celsius\n",
+		((uint16(sl.Temperature[1])<<8)|uint16(sl.Temperature[0]))-273) // Kelvin to degrees Celsius
+
+	return nil
+}
+
 // WIP - need to split out functionality further.
 func (d *NVMeDevice) PrintSMART(db *drivedb.DriveDb, w io.Writer) error {
 	buf := make([]byte, 4096)

@@ -349,6 +349,41 @@ func (d *MegasasDevice) inquiry() scsi.InquiryResponse {
 	return inqBuf
 }
 
+func PrintTemp(host uint16, diskNum uint8, w io.Writer) error {
+
+	m, _ := CreateMegasasIoctl()
+	db, err := drivedb.OpenDriveDb("drivedb.yaml")
+	if err != nil {
+		return err
+	}
+
+	identBuf := ata.IdentifyDeviceData{}
+	thisDrive := db.LookupDrive(identBuf.ModelNumber())
+
+	/*
+	 * SMART READ DATA
+	 */
+	cdb := scsi.CDB16{scsi.SCSI_ATA_PASSTHRU_16}
+	cdb[1] = 0x08                // ATA protocol (4 << 1, PIO data-in)
+	cdb[2] = 0x0e                // BYT_BLOK = 1, T_LENGTH = 2, T_DIR = 1
+	cdb[4] = ata.SMART_READ_DATA // feature LSB
+	cdb[10] = 0x4f               // low lba_mid
+	cdb[12] = 0xc2               // low lba_high
+	cdb[14] = ata.ATA_SMART      // command
+
+	respBuf := make([]byte, 512)
+
+	if err := m.PassThru(host, diskNum, cdb[:], respBuf, scsi.SG_DXFER_FROM_DEV); err != nil {
+		return err
+	}
+
+	smart := ata.SmartPage{}
+	binary.Read(bytes.NewBuffer(respBuf[:362]), utils.NativeEndian, &smart)
+	ata.PrintTemp(smart, thisDrive, w)
+
+	return nil
+}
+
 func OpenMegasasIoctl(host uint16, diskNum uint8, w io.Writer) error {
 	var respBuf []byte
 
