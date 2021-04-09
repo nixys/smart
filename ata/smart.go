@@ -291,13 +291,16 @@ func PrintTemp(smart SmartPage, drive drivedb.DriveModel, w io.Writer) {
 
 	if temp, found := tepmTable[194]; found {
 		re := regexp.MustCompile("[0-9]+")
-		fmt.Fprintf(w, "%s", re.FindAllString(temp, -1)[0])
+		res := re.FindAllString(temp, -1)
+		fmt.Fprintf(w, "%s", res[0])
 	} else if temp, found := tepmTable[231]; found {
 		re := regexp.MustCompile("[0-9]+")
-		fmt.Fprintf(w, "%s", re.FindAllString(temp, -1)[0])
+		res := re.FindAllString(temp, -1)
+		fmt.Fprintf(w, "%s", res[0])
 	} else if temp, found := tepmTable[190]; found {
 		re := regexp.MustCompile("[0-9]+")
-		fmt.Fprintf(w, "%s", re.FindAllString(temp, -1)[0])
+		res := re.FindAllString(temp, -1)
+		fmt.Fprintf(w, "%s", res[0])
 	}
 }
 
