@@ -26,11 +26,11 @@ import (
 
 	"golang.org/x/sys/unix"
 
-	"github.com/randreev1321/smart"
-	"github.com/randreev1321/smart/drivedb"
-	"github.com/randreev1321/smart/megaraid"
-	"github.com/randreev1321/smart/nvme"
-	"github.com/randreev1321/smart/scsi"
+	"github.com/nixys/smart"
+	"github.com/nixys/smart/drivedb"
+	"github.com/nixys/smart/megaraid"
+	"github.com/nixys/smart/nvme"
+	"github.com/nixys/smart/scsi"
 )
 
 const (

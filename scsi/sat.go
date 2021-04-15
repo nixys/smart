@@ -22,9 +22,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/randreev1321/smart/ata"
-	"github.com/randreev1321/smart/drivedb"
-	"github.com/randreev1321/smart/utils"
+	"github.com/nixys/smart/ata"
+	"github.com/nixys/smart/drivedb"
+	"github.com/nixys/smart/utils"
 )
 
 // SATDevice is a simple wrapper around an embedded SCSIDevice type, which handles sending ATA

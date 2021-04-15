@@ -19,7 +19,7 @@ package smart
 import (
 	"path/filepath"
 
-	"github.com/randreev1321/smart/scsi"
+	"github.com/nixys/smart/scsi"
 )
 
 // TODO: Make this discover NVMe and MegaRAID devices also.

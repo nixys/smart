@@ -19,7 +19,7 @@ package ata
 import (
 	"fmt"
 
-	"github.com/randreev1321/smart/utils"
+	"github.com/nixys/smart/utils"
 )
 
 // Table 10 of X3T13/2008D (ATA-3) Revision 7b, January 27, 1997
