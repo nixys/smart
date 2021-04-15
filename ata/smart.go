@@ -16,10 +16,11 @@ package ata
 
 import (
 	"fmt"
-	"github.com/randreev1321/smart/drivedb"
 	"io"
 	"regexp"
 	"strconv"
+
+	"github.com/nixys/smart/drivedb"
 )
 
 // Individual SMART attribute (12 bytes)

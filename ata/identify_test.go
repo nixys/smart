@@ -22,7 +22,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/randreev1321/smart/utils"
+	"github.com/nixys/smart/utils"
 )
 
 // ATA IDENTIFY DEVICE (command ECh)
