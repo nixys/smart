@@ -224,8 +224,7 @@ func (d *NVMeDevice) PrintTemp(db *drivedb.DriveDb, w io.Writer) error {
 
 	binary.Read(bytes.NewBuffer(buf[:]), utils.NativeEndian, &sl)
 
-	fmt.Fprintf(w, "Temperature: %d Celsius\n",
-		((uint16(sl.Temperature[1])<<8)|uint16(sl.Temperature[0]))-273) // Kelvin to degrees Celsius
+	fmt.Fprintf(w, "%d", ((uint16(sl.Temperature[1])<<8)|uint16(sl.Temperature[0]))-273) // Kelvin to degrees Celsius
 
 	return nil
 }
